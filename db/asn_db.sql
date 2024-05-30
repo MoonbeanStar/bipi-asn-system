@@ -19,10 +19,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ans_db`
+-- Database: `asn_db`
 --
-CREATE DATABASE IF NOT EXISTS `ans_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `ans_db`;
+CREATE DATABASE IF NOT EXISTS `asn_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `asn_db`;
 
 -- --------------------------------------------------------
 
@@ -121,10 +121,10 @@ ALTER TABLE `department`
 ALTER TABLE `users`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
--- Database: `bipi_borrow`
+-- Database: `asn_db`
 --
-CREATE DATABASE IF NOT EXISTS `ans_db` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `ans_db`;
+CREATE DATABASE IF NOT EXISTS `asn_db` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `asn_db`;
 
 -- --------------------------------------------------------
 
