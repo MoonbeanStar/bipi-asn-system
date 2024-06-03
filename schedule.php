@@ -25,7 +25,7 @@ function generateASN() {
       
           <section class="content-header">
             <h1>
-              Schedule Delivery
+              Delivery Schedule
             </h1>
           
           </section>
@@ -76,7 +76,6 @@ function generateASN() {
                     <th>Item Type</th>  
                     <th>DR Photo</th>
                     <th>Status</th>
-                    <th>Remarks</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -97,23 +96,17 @@ function generateASN() {
                     while ($row = $query->fetch_assoc()) {
                         $rowsFound = true; // Set the flag to true if we enter the loop
 
-                        // Determine the status
-                        switch ($row['barstat']) {
-                            case 1:
-                                $status = '<span class="label label-info">For Approval</span>';
-                                break;
-                            case 2:
-                                $status = '<span class="label label-success">Approved</span>';
-                                break;
-                            case 5:
-                                $status = '<span class="label label-danger">Cancel Booked</span>';
-                                break;
-                            case 3:
-                                $status = '<span class="label label-success">Successfully Delivered</span>';
-                                break;
-                            default:
-                                $status = '<span class="label label-default">Unknown</span>';
-                                break;
+                      // Determine the status
+                        if ($row['barstat'] == 1) {
+                            $status = '<span class="label label-info">For Approval</span>';
+                        } elseif ($row['barstat'] == 2) {
+                            $status = '<span class="label label-success">Approved</span>';
+                        } elseif ($row['barstat'] == 5) {
+                            $status = '<span class="label label-danger">Cancel Booked</span>';
+                        } elseif ($row['barstat'] == 3) {
+                            $status = '<span class="label label-success">Successfully Delivered</span>';
+                        } else {
+                            $status = '<span class="label label-default">Unknown</span>';
                         }
 
                         echo "
@@ -128,11 +121,10 @@ function generateASN() {
                             <td>" . $row['type'] . "</td>
                             <td><img src='images/" . $row['drPhoto'] . "' alt='DR Photo' style='width:100px;height:100px;'></td>
                             <td>" . $status . "</td>
-                            <td>" . $row['remarks'] . "</td>
                             <td>";
 
                             if ($row['barstat'] == 1) {
-                                echo "<button class='btn btn-info btn-sm btn-flat' onClick='openEditModal(" . $row['id'] . ",'" . $row['asn_no'] . "')\"><i class='fa fa-edit'></i> Edit</button>";
+                                echo "<button class='btn btn-info btn-sm btn-flat'><i class='fa fa-edit'></i> Edit</button>";
                             }
                             
                             if ($row['barstat'] != 2) {
@@ -161,44 +153,6 @@ function generateASN() {
 </div>
 <?php include 'includes/scripts.php'; ?>          
 				       
-<script>
-
-$(document).ready(function() {
-    function openEditModal(response, asn_no) {
-        $('.catid').val(response.id);
-        $('#edit_asn_no').val(asn_no);  // Set ASN number
-        $('#edit_supplier').val(response.supplier_id);
-        $('#edit_datepicker_edit').val(response.delivery_date);
-        $('#edit_delTime').val(response.delivery_time);
-        $('#edit_name').val(response.item_category_id);
-        $('#edit_itemType').val(response.item_type_id);
-        $('#edit_totalDel').val(response.total_delivery);
-        $('#edit_uom1Name').val(response.uom1_name);
-        $('#edit_totalQty').val(response.total_quantity);
-        $('#edit_uom2Name').val(response.uom2_name);
-        $('#edit_vehicleModel').val(response.vehicle_model);
-        $('#edit_plateNo').val(response.plate_no);
-        $('#edit_driverName').val(response.driver_name);
-        $('#edit_helperName').val(response.helper_name);
-        $('#edit').modal('show');
-    }
-
-    $(document).on('click', '.edit', function(e) {
-        e.preventDefault();
-        var id = $(this).data('id');
-        var asn_no = $(this).data('asn_no');
-        $.ajax({
-            type: 'POST',
-            url: 'schedule_edit.php',
-            data: {id: id},
-            dataType: 'json',
-            success: function(response) {
-                openEditModal(response, asn_no);
-            }
-        });
-    });
-});
-</script>
 
 
 

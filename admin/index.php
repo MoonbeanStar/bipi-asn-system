@@ -8,7 +8,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   	<div class="login-logo">
-  		<b>MISBorrowingSystem</b>
+  		<b>BIPI Advance Shipping Notice System</b>
   	</div>
   
   	<div class="login-box-body">

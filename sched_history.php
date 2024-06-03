@@ -36,7 +36,7 @@ if ($result && $result->num_rows > 0) {
 	        	<div class="col-sm-30 col-sm-offset-0">
 	        		<div class="box">
 	        			<div class="box-header with-border">
-	        				<h3 class="box-title">SCHEDULED HISTORY</h3>
+	        				<h3 class="box-title">SCHEDULE HISTORY</h3>
 	        	
 	        			</div>
 	        			<div class="box-body">
