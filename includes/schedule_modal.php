@@ -58,7 +58,7 @@ if(!isset($conn)){
                                 <select class="form-control" id="delTime" name="delTime" required>
                                     <option value="" selected disabled>Please Select Delivery Time</option>
                                     <?php
-                                        $delivery_times = array("6:00AM", "8:00AM", "10:00AM", "1:00PM", "3:00PM");
+                                        $delivery_times = array("6:00AM","8:00AM","10:00AM","1:00PM","3:00PM");
                                         // Assuming $selected_delivery_time is an array containing delivery times already selected
                                         foreach ($delivery_times as $time) {
                                             if (in_array($time, $selected_delivery_time)) {
