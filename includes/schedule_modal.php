@@ -51,24 +51,26 @@ if(!isset($conn)){
                     </div>
                 </div>
 
+               
                 <div class="form-group">
-                <label for="delTime" class="col-sm-3 control-label">Delivery Time:</label>
-                <div class="col-sm-9">
-                    <select class="form-control" id="delTime" name="delTime" required>
-                        <option value="" selected disabled>Please Select Delivery Time</option>
-                        <?php
-                            $delivery_times = array("6AM", "8AM", "10AM", "1PM", "3PM");
-                            foreach ($delivery_times as $time) {
-                                if (in_array($time, $approved_times)) {
-                                    echo '<option value="' . $time . '" disabled>' . $time . ' (Approved)</option>';
-                                } else {
-                                    echo '<option value="' . $time . '">' . $time . '</option>';
-                                }
-                            }
-                        ?>
-                    </select>
-                </div>
-            </div>
+                    <label for="delTime" class="col-sm-3 control-label">Delivery Time:</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="delTime" name="delTime" required>
+                                    <option value="" selected disabled>Please Select Delivery Time</option>
+                                    <?php
+                                        $delivery_times = array("6:00AM", "8:00AM", "10:00AM", "1:00PM", "3:00PM");
+                                        // Assuming $selected_delivery_time is an array containing delivery times already selected
+                                        foreach ($delivery_times as $time) {
+                                            if (in_array($time, $selected_delivery_time)) {
+                                                echo '<option value="' . $time . '" disabled>' . $time . '</option>';
+                                            } else {
+                                                echo '<option value="' . $time . '">' . $time . '</option>';
+                                            }
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                    </div>
 
             <h5><b>INFORMATION</b></h5>    
                 <div class="form-group">
@@ -258,26 +260,228 @@ if(!isset($conn)){
 
 
             <!-- Edit -->
-            <div class="modal fade" id="edit">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title"><b>Edit Reserved</b></h4>
-                        </div>
-                        <div class="modal-body">
-                        <form class="form-horizontal" method="POST" action="schedule_edit.php">
-                            <input type="hidden" class="catid" name="id">
-
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-                        <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i> Update</button>
-                        </form>
+         <!-- Edit -->
+         <div class="modal fade" id="edit">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Edit Shipping Notice</b></h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" method="POST" action="schedule_edit.php" enctype="multipart/form-data">
+                    
+                    <h5><b>SCHEDULE</b></h5>
+                    <input type="hidden" class="catid" name="id">
+                    <div class="form-group">
+                        <label for="edit_asn_no" class="col-sm-3 control-label">ASN Number</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="edit_asn_no" name="asn_no" readonly>
                         </div>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="edit_supplier" class="col-sm-3 control-label">Supplier Name</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" name="supplier" id="edit_supplier" required>
+                                <option value="" selected disabled> Please Select Supplier Here.</option>
+                                <?php  
+                                    $sql = "SELECT * FROM supplier WHERE id = '".$_SESSION['supplier']."'";
+
+                 
+                                      $qry = $conn->query($sql);
+                                    while($row = $qry->fetch_array()):
+                                ?>
+                                    <option value="<?php echo $row['supplier_id'] ?>"><?php echo ucwords($row['firstname'].' '.$row['lastname']) ?></option>
+                                <?php endwhile;  ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit_datepicker_edit" class="col-sm-3 control-label">Delivery Date:</label>
+                        <div class="col-sm-9">
+                            <div class="date">
+                                <input type="date" class="form-control" id="edit_datepicker_edit" name="delDate" required>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label for="edit_delTime" class="col-sm-3 control-label">Delivery Time:</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="edit_delTime" name="delTime" required>
+                                <option value="" selected disabled>Please Select Delivery Time</option>
+                                <?php
+                                    $delivery_times = array("6:00AM", "8:00AM", "10:00AM", "1:00PM", "3:00PM");
+                                    foreach ($delivery_times as $time) {
+                                        echo '<option value="' . $time . '">' . $time . '</option>';
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h5><b>INFORMATION</b></h5>    
+                    <div class="form-group">
+                        <label for="edit_name" class="col-sm-3 control-label">Item Category:</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="edit_name" name="name" required>
+                                <option value="" selected disabled>Please Select Item Here.</option>
+                                <?php
+                                    $sql = "SELECT * FROM category";
+                                    $result = $conn->query($sql);
+                                    while($data = $result->fetch_assoc()) {
+                                ?>
+                                    <option value="<?php echo $data['id']?>"><?php echo $data['name'];?></option>
+                                <?php
+                                    } 
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_itemType" class="col-sm-3 control-label">Item Type:</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="edit_itemType" name="itemType" required>
+                                <option value="" selected disabled>Please Select Item Here.</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_drPhoto" class="col-sm-3 control-label">Upload DR Photo:</label>
+                        <div class="col-sm-9">
+                            <input type="file" id="edit_drPhoto" name="drPhoto" accept=".jpg, .jpeg, .png, .gif">
+                            <br>
+                        </div>
+                    </div>
+              
+                    <div class="form-group">
+                        <label for="edit_totalDel" class="col-sm-3 control-label">Total No. of Delivery:</label>
+                        <div class="col-sm-9"> 
+                            <div class="row">
+                                <div class="col-sm-6"> 
+                                    <select class="form-control" id="edit_totalDel" name="totalDel" required>
+                                        <?php
+                                            $totalDel = 50; 
+                                            for ($i = 0; $i <= $totalDel; $i++) {
+                                                echo "<option value='$i'>$i</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6"> 
+                                    <select class="form-control" id="edit_uom1Name" name="uom1Name" required>
+                                        <option value="" selected disabled>Please Select Here.</option>
+                                        <?php  
+                                            $package = "SELECT id, uom1Name FROM package";
+                                            $result = $conn->query($package);
+                                            if ($result->num_rows > 0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                                    echo "<option value='" . $row['id'] . "'>" . ucwords($row['uom1Name']) . "</option>";
+                                                }
+                                            } else {
+                                                echo "<option value=''>No package type available</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="edit_append"></span>
+                    <div class="form-group">
+                        <div class="col-sm-9 col-sm-offset-3">
+                            <button class="btn btn-primary btn-xs btn-flat" id="edit_append-div"><i class="fa fa-plus"></i>Add No.</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_totalQty" class="col-sm-3 control-label">Total Quantity:</label>
+                        <div class="col-sm-9"> 
+                            <div class="row">
+                                <div class="col-sm-6"> 
+                                    <select class="form-control" id="edit_totalQty" name="totalQty" required>
+                                        <?php
+                                            $totalQty = 10;
+                                            for ($i = 0; $i <= $totalQty; $i++) {
+                                                echo "<option value='$i'>$i</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6"> 
+                                    <select class="form-control" id="edit_uom2Name" name="uom2Name" required>
+                                        <option value="" selected disabled>Please Select Here.</option>
+                                        <?php  
+                                            $quantity = "SELECT id, qtyname FROM quantity";
+                                            $result = $conn->query($quantity);
+                                            if ($result->num_rows >0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                                    echo "<option value='" . $row['id'] . "'>" . ucwords($row['qtyname']) . "</option>";
+                                                }
+                                            } else {
+                                                echo "<option value=''>No quantity available</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="edit_append-div-qty"></span>
+                    <div class="form-group">
+                        <div class="col-sm-9 col-sm-offset-3">
+                            <button class="btn btn-primary btn-xs btn-flat" id="edit_append_qty"><i class="fa fa-plus"></i>Add Quantity</button>
+                        </div>
+                    </div>
+
+                    <h5><b>VEHICLE DETAILS</b></h5>
+                    <div class="form-group">
+                        <label for="edit_vehicleModel" class="col-sm-3 control-label">Vehicle Model:</label>
+                        <div class="col-sm-9"> 
+                            <input type="text" class="form-control" id="edit_vehicleModel" name="vehicleModel">
+                        </div>
+                    </div>
+                 
+                    <div class="form-group">
+                        <label for="edit_plateNo" class="col-sm-3 control-label">Plate No.:</label>
+                        <div class="col-sm-9"> 
+                            <input type="text" class="form-control" id="edit_plateNo" name="plateNo">
+                        </div>
+                    </div>
+              
+                    <div class="form-group">
+                        <label for="edit_driverName" class="col-sm-3 control-label">Driver Name:</label>
+                        <div class="col-sm-9"> 
+                            <input type="text" class="form-control" id="edit_driverName" name="driverName">
+                        </div>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="edit_helperName" class="col-sm-3 control-label">Helper Name:</label>
+                        <div class="col-sm-9"> 
+                            <input type="text" class="form-control" id="edit_helperName" name="helperName">
+                        </div>
+                    </div>
+                    <span id="edit_append-vehicle"></span>
+                    <div class="form-group">
+                        <div class="col-sm-9 col-sm-offset-3">
+                            <button type="button" class="btn btn-primary btn-xs btn-flat" id="edit_addVehicle"><i class="fa fa-plus"></i>Add Vehicle</button>
+                        </div>
+                    </div>
+                
+                </form>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i> Update</button>
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- Delete Modal -->
             <div class="modal fade" id="delete">

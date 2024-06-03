@@ -3,24 +3,6 @@ include 'includes/session.php';
 include 'includes/conn.php'; // Ensure this file includes the database connection
 
 
-if (isset($_POST['delDate']) && isset($_POST['supplier'])) {
-    $selected_date = $_POST['delDate'];
-    $supplier_id = $_POST['supplier'];
-
-    // Fetching approved delivery times for the selected date and supplier
-    $approved_times = [];
-    $sql_check_times = "SELECT delTime FROM schedule_data WHERE delDate = '$selected_date' AND supplier_id = '$supplier_id' AND status = 2";
-    $result_check_times = $conn->query($sql_check_times);
-
-    if ($result_check_times->num_rows > 0) {
-        while ($row = $result_check_times->fetch_assoc()) {
-            $approved_times[] = $row['delTime'];
-        }
-    }
-}
-
-
-
 if(isset($_POST['add'])){
     $asn_no = $_POST['asn_no'];
     $supplier = $_POST['supplier']; 
